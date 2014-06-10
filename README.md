@@ -30,6 +30,9 @@ wtfcrepo3: A FAQ for Fedora Commons Repository v3.x
    This is where XML enters the picture: FCRepo serializes the tree of the object, its properties, and its datastreams (though not usually their content) as an XML document using a markup called <B>F</b>edora <b>O</b>bject <b>XML</b>, or *FOXML*. FOXML documents encapsulate versions of datastreams with pointers to their content or, in some cases, inline XML of their content. The FOXML document approximates what digital preservationists call an <b>A</b>rchival <b>I</b>nformation <b>P</b>ackage (*AIP*). While datastream properties (for all versions) are present inline in the FOXML, datastream contents will normally be indicated with a URI. The format of this URI will vary according to whether the datastream's contents are managed by FCRepo (that is, in FCRepo's storage) or externally (either as a file-system URI or an HTTP URL).  
    The location of this XML document will depend on the configuration FCRepo's storage module, but current defaults will place it in a shallow hierarchy $FEDORA_HOME/data/objectStore based on the MD5 hash of the FCRepo object's internal URI.  
 
+4. *Are there limits to the size of files that can be ingested into FCRepo 3?*  
+   Until recent iterations of FCRepo3, the archaism of the Java Web App specs limited uploaded parts to 2Gb (owing to the definition of body length as a signed 32-bit integer), and thus implicitly limited the size of POSTed datastream contents. This *ought* no longer to be the case (file bugs where applicable), but the easiest way to deal with such files is by passing references to the content instead (the dsLocation parameter in the REST api). One significant departure would be datastreams with inline XML content- such datastreams must be representable as a byte array, and are thus limited to 2Gb (please, do not create inline XML datastreams this large).  
+
 Contributors
 ============
 \#wtfcrepo3
