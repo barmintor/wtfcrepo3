@@ -36,6 +36,8 @@ wtfcrepo3: A FAQ for Fedora Commons Repository v3.x
 5. *Can you ingest files of any type into FCRepo 3 (including unknown MIME types, or obsolete formats)?*  
    FCRepo is agnostic about the format of managed or external datastream contents (with the obvious exceptions of the system datastreams). The drawbacks of unidentified MIME types will be in the inferred download name, which for datastreams with no MIME or with application/binary will be given the suffix '.bin' (this can be circumvented by giving the datastream a dsLabel property). If the MIME is inadequate to identifying the format, it can be elaborated with the datastream's formatURI property, which is largely documentary (eg, assign a URI from the PRONOM registry to this property).  
 
+6. *If my datastream references content externally, can I still use the AUDIT stream to track changes?*  
+   FCRepo can only track the changes it knows about, but your repository can indicate a known update to external content by updating one of the datastream properties (eg, pushing a new version with the same content URI but a changed property). Likewise, deletion of the content in the service will not be recognized in FCRepo unless your repository's workflow also deletes the referring datastream.  
 
 Contributors
 ============
