@@ -33,6 +33,10 @@ wtfcrepo3: A FAQ for Fedora Commons Repository v3.x
 4. *Are there limits to the size of files that can be ingested into FCRepo 3?*  
    Until recent iterations of FCRepo3, the archaism of the Java Web App specs limited uploaded parts to 2Gb (owing to the definition of body length as a signed 32-bit integer), and thus implicitly limited the size of POSTed datastream contents. This *ought* no longer to be the case (file bugs where applicable), but the easiest way to deal with such files is by passing references to the content instead (the dsLocation parameter in the REST api). One significant departure would be datastreams with inline XML content- such datastreams must be representable as a byte array, and are thus limited to 2Gb (please, do not create inline XML datastreams this large).  
 
+5. *Can you ingest files of any type into FCRepo 3 (including unknown MIME types, or obsolete formats)?*  
+   FCRepo is agnostic about the format of managed or external datastream contents (with the obvious exceptions of the system datastreams). The drawbacks of unidentified MIME types will be in the inferred download name, which for datastreams with no MIME or with application/binary will be given the suffix '.bin' (this can be circumvented by giving the datastream a dsLabel property). If the MIME is inadequate to identifying the format, it can be elaborated with the datastream's formatURI property, which is largely documentary (eg, assign a URI from the PRONOM registry to this property).  
+
+
 Contributors
 ============
 \#wtfcrepo3
