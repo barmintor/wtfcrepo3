@@ -7,7 +7,7 @@ wtfcrepo3: A FAQ for Fedora Commons Repository v3.x
     An object is a node in the repository graph. It is identified with a local ID called its PID. The PID consists of two parts: A namespace and a name (usually a sequentially generated number) joined with a colon (':'). In the repository, this PID is used to compose the URI for an object, which will be in the form "info:fedora/$PID".
     Objects have **properties** and **datastreams**.
   2. *And FCRepo Datastreams?*  
-    Datastreams are streams of bytes identified in the context of a FCRepo object. Like Objects, they have properties. It's no accident that they sound a lot like files; they usually start out that way. But that may also be pointers to streams of bytes in the form of a URL.  
+    Datastreams are streams of bytes identified in the context of a FCRepo object. Like Objects, they have properties. It's no accident that they sound a lot like files; they usually start out that way. But that may also be pointers to streams of bytes in the form of a URL. Datastreams and their contents can be versioned in FCRepo 3.  
 
 2. *How are simple FCRepo objects structured?*  
    Objects minimally have a PID, some core properties, and the 3 required system datastreams: DC, RELS-EXT, and AUDIT. There is also an optional system datastream: RELS-INT.
@@ -25,7 +25,10 @@ wtfcrepo3: A FAQ for Fedora Commons Repository v3.x
     * info:fedora/fedora-system:def/model#ownerId, the semicolon delimited list of FCRepo user IDs that own the object (by default fedoraAdmin)
     * info:fedora/fedora-system:def/model#createdDate, the date created
     * info:fedora/fedora-system:def/view#lastModifiedDate  
-    The core object properties are indexed into both the basic search app's index and the triplestore (if enabled) 
+    The core object properties are indexed into both the basic search app's index and the triplestore (if enabled). Unfortunately, the object's core properties are not versioned because of an idiosyncracy in FCRepo's object serialization. 
+3. *How does FCRepo 3 store objects?*  
+   This is where XML enters the picture: FCRepo serializes the tree of the object, its properties, and its datastreams (though not usually their content) as an XML document using a markup called <B>F</b>edora <b>O</b>bject <b>XML</b>, or *FOXML*. FOXML documents encapsulate versions of datastreams with pointers to their content or, in some cases, inline XML of their content. The FOXML document approximates what digital preservationists call an <b>A</b>rchival <b>I</b>nformation <b>P</b>ackage (*AIP*). While datastream properties (for all versions) are present inline in the FOXML, datastream contents will normally be indicated with a URI. The format of this URI will vary according to whether the datastream's contents are managed by FCRepo (that is, in FCRepo's storage) or externally (either as a file-system URI or an HTTP URL).  
+   The location of this XML document will depend on the configuration FCRepo's storage module, but current defaults will place it in a shallow hierarchy $FEDORA_HOME/data/objectStore based on the MD5 hash of the FCRepo object's internal URI.  
 
 Contributors
 ============
