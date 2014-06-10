@@ -39,6 +39,23 @@ wtfcrepo3: A FAQ for Fedora Commons Repository v3.x
 6. *If my datastream references content externally, can I still use the AUDIT stream to track changes?*  
    FCRepo can only track the changes it knows about, but your repository can indicate a known update to external content by updating one of the datastream properties (eg, pushing a new version with the same content URI but a changed property). Likewise, deletion of the content in the service will not be recognized in FCRepo unless your repository's workflow also deletes the referring datastream.  
 
+7. *Can you create hierarchical relationships of any depth? (objects within collections within collections...)*  
+   The naive answer is "Yes! Objects can have any relationship you define!" But this is not very helpful.  
+   More complicated relationships between objects are indicated, one triple at a time, in RELS-EXT. For example, in an object with PID 'my:1', you might have the following RELS-EXT data:
+```
+<rdf:Description rdf:about="info:fedora/my:1">
+	<isMemberOf xmlns="info:fedora/fedora-system:def/relations-external#" rdf:resource="info:fedora/my:2"></memberOf>
+</rdf:Description>
+```  
+... and in the object with PID 'my:2', RELS-EXT data:
+```
+<rdf:Description rdf:about="info:fedora/my:2">
+	<isMemberOf xmlns="info:fedora/fedora-system:def/relations-external#" rdf:resource="info:fedora/my:3"></memberOf>
+</rdf:Description>
+```  
+   ... but your repo will need a way of following those relationships. If you have enabled the triplestore (ie the 'resource index'), then you can use that to query these relationships. Alternately, you might flatten the data out and index it externally. In its minimal configuration, FCRepo only provides you with the shallowest RDF queries.  
+   Another approach is to separate the complexity of structure into a third entity, with simple parent child relationships between objects to cohere collections, but more elaborate structures in another datastream to order them appropriately (eg, some type of structure map in a datastream). Which solution is best depends on the needs of your application, and the characteristics of the data- for example, if the intermediate nodes have substantial data of their own, the graph-walking approach might be best.
+
 Contributors
 ============
 \#wtfcrepo3
